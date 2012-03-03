@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #===============================================================================
 # ErwinJr is a simulation program for quantum semiconductor lasers.
 # Copyright (C) 2012 Kale J. Franz, PhD
@@ -38,6 +40,7 @@ import settings
 import SupportClasses
 import ThePhysics
 
+
 #===============================================================================
 # Version
 #===============================================================================
@@ -63,11 +66,11 @@ class MainWindow(QMainWindow):
                        (128,128,130), (218,189,63), (223,155,74), (210,87,71), 
                        (185,82,159), (105,189,69), (20,20,20), (110,205,222), 
                        (57,82,164)]
-                       
+
         if os.name == "nt":
-            self.newLine = '\n'
+            self.newLineChar = '\n'
         elif os.name == "posix":
-            self.newLine = '\r\n'
+            self.newLineChar = '\n'
         
         self.qclayers = ThePhysics.QCLayers()
         self.strata = ThePhysics.Strata()
@@ -2655,7 +2658,7 @@ class MainWindow(QMainWindow):
         if fname:
             if firstLine.split(':')[0] == 'Description':
                 self.qclPtonLoad(fname)
-            elif firstLine == 'ErwinJr Data File'+self.newLine:
+            elif firstLine == 'ErwinJr Data File' + self.newLineChar:
                 self.qclLoad(fname)
             else:
                 QMessageBox.warning(self,'ErwinJr Error','Could not recognize input file.')
@@ -2699,7 +2702,7 @@ class MainWindow(QMainWindow):
             self.qclayers.diffLength  = float(filehandle.readline().split(':')[1].strip())
             
             filehandle.readline() #throw the column description line away
-            lines = filehandle.readlines();
+            lines = filehandle.readlines()
             rows = len(lines)
             variables = ['layerWidths', 'layerBarriers', 'layerARs', 'layerDopings', 
                          'layerMaterials', 'layerDividers']
@@ -2730,7 +2733,7 @@ class MainWindow(QMainWindow):
             filehandle.readline() #throw away 'ErwinJr Data File'
             while True:
                 line = filehandle.readline()
-                if line == '# QC layers #'+self.newLine:
+                if line == '# QC layers #'+self.newLineChar:
                     break
                 line = line.split(':')
                 valDict[line[0]] = line[1].strip()
@@ -2774,7 +2777,7 @@ class MainWindow(QMainWindow):
             lines = []
             while True:
                 line = filehandle.readline()
-                if line == '# Optical strata #'+self.newLine:
+                if line == '# Optical strata #'+self.newLineChar:
                     break
                 lines.append(line)
             rows = len(lines)
