@@ -42,7 +42,7 @@ import ThePhysics
 # Version
 #===============================================================================
 ejVersion = 120217
-majorVersion = 2.1.0
+majorVersion = '2.1.0'
 
 #===============================================================================
 # Global Variables
@@ -63,6 +63,11 @@ class MainWindow(QMainWindow):
                        (128,128,130), (218,189,63), (223,155,74), (210,87,71), 
                        (185,82,159), (105,189,69), (20,20,20), (110,205,222), 
                        (57,82,164)]
+                       
+        if os.name == "nt":
+            self.newLine = '\n'
+        elif os.name == "posix":
+            self.newLine = '\r\n'
         
         self.qclayers = ThePhysics.QCLayers()
         self.strata = ThePhysics.Strata()
@@ -2650,7 +2655,7 @@ class MainWindow(QMainWindow):
         if fname:
             if firstLine.split(':')[0] == 'Description':
                 self.qclPtonLoad(fname)
-            elif firstLine == 'ErwinJr Data File\n':
+            elif firstLine == 'ErwinJr Data File'+self.newLine:
                 self.qclLoad(fname)
             else:
                 QMessageBox.warning(self,'ErwinJr Error','Could not recognize input file.')
@@ -2725,7 +2730,7 @@ class MainWindow(QMainWindow):
             filehandle.readline() #throw away 'ErwinJr Data File'
             while True:
                 line = filehandle.readline()
-                if line == '# QC layers #\n':
+                if line == '# QC layers #'+self.newLine:
                     break
                 line = line.split(':')
                 valDict[line[0]] = line[1].strip()
@@ -2769,7 +2774,7 @@ class MainWindow(QMainWindow):
             lines = []
             while True:
                 line = filehandle.readline()
-                if line == '# Optical strata #\n':
+                if line == '# Optical strata #'+self.newLine:
                     break
                 lines.append(line)
             rows = len(lines)
