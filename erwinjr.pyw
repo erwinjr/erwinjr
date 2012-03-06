@@ -67,9 +67,8 @@ class MainWindow(QMainWindow):
                        (185,82,159), (105,189,69), (20,20,20), (110,205,222), 
                        (57,82,164)]
 
-        if os.name == "nt":
-            self.newLineChar = '\n'
-        elif os.name == "posix":
+        self.newLineChar = '\n'
+        if sys.platform == "darwin":
             self.newLineChar = '\n'
         
         self.qclayers = ThePhysics.QCLayers()
@@ -167,6 +166,9 @@ class MainWindow(QMainWindow):
         self.layerTable.setSelectionMode(QTableWidget.SingleSelection)
         self.layerTable.setMaximumWidth(340)
         self.layerTable.setMinimumWidth(340)
+        if sys.platform == 'darwin':
+            self.layerTable.setMaximumWidth(405)
+            self.layerTable.setMinimumWidth(405)
         self.connect(self.layerTable,SIGNAL("itemChanged(QTableWidgetItem*)"),self.layerTable_itemChanged)
         self.connect(self.layerTable,SIGNAL("itemSelectionChanged()"),self.layerTable_itemSelectionChanged)
         
@@ -236,8 +238,10 @@ class MainWindow(QMainWindow):
         self.LpStringBox = QTextEdit('')
         self.LpStringBox.setReadOnly(True)
         self.LpStringBox.setSizePolicy(QSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed))
-        self.LpStringBox.setMaximumHeight(62)
-        self.LpStringBox.setMaximumWidth(97)
+        self.LpStringBox.setMaximumHeight(75)
+        self.LpStringBox.setMaximumWidth(105)
+        if sys.platform == "darwin":
+            self.LpStringBox.setMaximumWidth(130)
         LpLayout = QGridLayout()
         LpLayout.addWidget(QLabel('<b>first</b>'), 0,0)
         LpLayout.addWidget(QLabel('<b>last</b>'), 0,1)
@@ -341,6 +345,8 @@ class MainWindow(QMainWindow):
         self.DescriptionBox.setSizePolicy(QSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed))
         self.DescriptionBox.setMaximumHeight(40)
         self.DescriptionBox.setMaximumWidth(190)
+        if sys.platform == 'darwin':
+            self.DescriptionBox.setMaximumWidth(285)
         self.connect(self.DescriptionBox, SIGNAL("textChanged()"), self.input_description)
         DescLayout = QVBoxLayout()
         DescLayout.addWidget(self.DescriptionBox)
@@ -359,7 +365,7 @@ class MainWindow(QMainWindow):
         self.wellSelectButton = QPushButton("Layer Select")
         self.wellSelectButton.setCheckable(True)
         self.connect(self.wellSelectButton, SIGNAL("toggled(bool)"), self.well_select)
-        clearWFsButton = QPushButton("Clear Wavefunctions")
+        clearWFsButton = QPushButton("Clear")
         self.connect(clearWFsButton, SIGNAL("clicked()"), self.clear_WFs)
         plotControl_grid = QGridLayout()
         plotControl_grid.addWidget(self.wellSelectButton, 0,0, 1,2)
@@ -385,6 +391,8 @@ class MainWindow(QMainWindow):
         self.pairSelectString.setSizePolicy(QSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed))
         self.pairSelectString.setMaximumHeight(130)
         self.pairSelectString.setMaximumWidth(190)
+        if sys.platform == 'darwin':
+            self.pairSelectString.setMaximumWidth(285)
         calculateControl_grid = QGridLayout()
         calculateControl_grid.addWidget(self.pairSelectButton, 0,0, 1,2)
         calculateControl_grid.addWidget(self.FoMButton, 1,0, 1,1)
@@ -644,6 +652,9 @@ class MainWindow(QMainWindow):
         self.stratumTable.setSelectionMode(QTableWidget.SingleSelection)
         self.stratumTable.setMinimumWidth(450)
         self.stratumTable.setMaximumWidth(450)
+        if sys.platform == 'darwin':
+            self.stratumTable.setMinimumWidth(550)
+            self.stratumTable.setMaximumWidth(550)
         self.stratumTable.setMinimumHeight(450)
         self.stratumTable.setMaximumHeight(650)
         self.connect(self.stratumTable,SIGNAL("itemChanged(QTableWidgetItem*)"),self.stratumTable_itemChanged)
@@ -3136,9 +3147,7 @@ def main():
     installDirectory = str(qsettingsSystem.value('installDirectory').toString())
     if installDirectory:
         os.chdir(installDirectory)
-    
-        
-    
+
     # Create and display the splash screen
     splash_pix = QPixmap('images/erwinjr_splash.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
@@ -3150,10 +3159,6 @@ def main():
     
     app.setWindowIcon(QIcon('images/EJpng48x48.png'))
 
-    #set to cleanlooks on macs and linux
-    if os.name == "posix":
-        app.setStyle('cleanlooks')
-    
     #this block handles a filename passed in by command line
     try:
         fileName = sys.argv[1]
