@@ -71,7 +71,7 @@ int inv_quadratic_interp(double *xnew, double *ynew, double *idxs, int EigenESiz
   for(q=0;q<EigenESize;q++)
   {
     idx = *(idxs+q);
-    printf("%d\n",idx);
+    //printf("%d\n",idx);
     x0=*(xnew+idx-1); fx0=*(ynew+idx-1);
     x1=*(xnew+idx);   fx1=*(ynew+idx);
     x2=*(xnew+idx+1); fx2=*(ynew+idx+1);

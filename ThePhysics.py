@@ -1871,8 +1871,9 @@ def broadening_energy(data, upper, lower):
     transitions = bitwise_xor(data.xBarriers[0:-1].astype(bool),data.xBarriers[1:].astype(bool))
     transitionIdxs = nonzero(transitions == True)[0]# + int(100/data.xres)
     psi2int2 = sum((psi_i[transitionIdxs]**2-psi_j[transitionIdxs]**2)**2)
-    DeltaLambda = 0.76 * 1e-9
-    twogamma = pi*data.me[0]*m0*e0**2/hbar**2 * DeltaLambda**2 * (data.EcG[1] - data.EcG[0])**2 * psi2int2 *1e3
+    DeltaLambda = 0.76 * 1e-9 * 1e-9
+    twogamma = pi*data.me[0]*m0*e0**2/hbar**2 * DeltaLambda**2 * (data.EcG[1] - data.EcG[0])**2 * psi2int2
+    twogamma *=  1e3/e0 #convert to meV
     return twogamma
 
 def alphaISB(data, stateR, lower):
