@@ -34,6 +34,7 @@ import MaterialConstants
 c = MaterialConstants.MaterialConstants()
 
 from ctypes import *
+cFunctions=CDLL('cFunctions.so')
 try:
     cFunctions=CDLL('cFunctions.so')
 except WindowsError:
@@ -145,8 +146,9 @@ class Strata(object):
                 self.stratumRIndexes[q] = n_Au+k_Au*1j
             elif material == 'SiNx':
                 #from Jean Nguyen's Thesis
-                C1 = 2.0019336; C2 = 0.15265213; C3 = 4.0495557;
-                D0=-0.00282; D1=0.003029; D2=-0.0006982; D3=-0.0002839; D4=0.0001816; D5=-3.948e-005; D6=4.276e-006; D7=-2.314e-007; D8=4.982e-009;
+                C1 = 2.0019336; C2 = 0.15265213; C3 = 4.0495557
+                D0=-0.00282; D1=0.003029; D2=-0.0006982; D3=-0.0002839;
+                D4=0.0001816; D5=-3.948e-005; D6=4.276e-006; D7=-2.314e-007; D8=4.982e-009
                 n_SiNx = C1 + C2/wl**2 + C3/wl**4
                 k_SiNx = D0+D1*wl+D2*wl**2+D3*wl**3+D4*wl**4+D5*wl**5+D6*wl**6+D7*wl**7+D8*wl**8
                 k_SiNx *= 100
@@ -261,10 +263,21 @@ class Strata(object):
         overlap  = bitwise_or(overlap1, overlap2)
         idxs = nonzero(overlap == True)[0]
         zeroCrossings = zeros(idxs.size)
-        
-        cFunctions.inv_quadratic_interp(xnew.ctypes.data_as(c_void_p), ynew.ctypes.data_as(c_void_p), 
-                                                idxs.ctypes.data_as(c_void_p), int(zeroCrossings.size), 
-                                                zeroCrossings.ctypes.data_as(c_void_p))
+
+        if False:
+            cFunctions.inv_quadratic_interp(xnew.ctypes.data_as(c_void_p), ynew.ctypes.data_as(c_void_p),
+                                                    idxs.ctypes.data_as(c_void_p), int(zeroCrossings.size),
+                                                    zeroCrossings.ctypes.data_as(c_void_p))
+        else:
+            for q, idx in enumerate(idxs): # do quadratic interpolation
+                x0=xnew[idx-1]; fx0=ynew[idx-1]
+                x1=xnew[idx];   fx1=ynew[idx]
+                x2=xnew[idx+1]; fx2=ynew[idx+1]
+                d1=(fx1-fx0)/(x1-x0); d2=(fx2-fx1)/(x2-x1)
+                #inverse quadratic interpolation
+                x3 = x0*fx1*fx2/(fx0-fx1)/(fx0-fx2) + x1*fx0*fx2/(fx1-fx0)/(fx1-fx2) + x2*fx0*fx1/(fx2-fx0)/(fx2-fx1)
+                zeroCrossings[q] = x3
+
         return zeroCrossings
     
     def beta_find(self, betaInit = None):
@@ -295,7 +308,7 @@ class Strata(object):
             beta = betaInit
         
         beta_find_precision = 1e-5
-        if True:
+        if False: #setting to True makes the function stall in Mac OS X
             betaIn = beta
             stratumRIndexesReal = self.stratumRIndexes.real.copy()
             stratumRIndexesImag = self.stratumRIndexes.imag.copy()
@@ -1486,18 +1499,19 @@ class QCLayers(object):
         overlap2 = bitwise_and(gtz[1:],ltz[0:-1])
         overlap  = bitwise_or(overlap1, overlap2)
         idxs = nonzero(overlap == True)[0]
+        idxs = idxs.astype(float) #need this to maintain compatibility with 32-bit and 64-bit systems
         self.EigenE = zeros(idxs.size)
-        
+
         if True:
             cFunctions.inv_quadratic_interp(xnew.ctypes.data_as(c_void_p), ynew.ctypes.data_as(c_void_p), 
-                                            idxs.ctypes.data_as(c_void_p), int(self.EigenE.size), 
+                                            idxs.ctypes.data_as(c_void_p), int(idxs.size),
                                             self.EigenE.ctypes.data_as(c_void_p))
         else:
             for q, idx in enumerate(idxs): # do quadratic interpolation
                 x0=xnew[idx-1]; fx0=ynew[idx-1]
                 x1=xnew[idx];   fx1=ynew[idx]
                 x2=xnew[idx+1]; fx2=ynew[idx+1]
-                d1=(fx1-fx0)/(x1-x0); d2=(fx2-fx1)/(x2-x1);
+                d1=(fx1-fx0)/(x1-x0); d2=(fx2-fx1)/(x2-x1)
                 #inverse quadratic interpolation
                 x3 = x0*fx1*fx2/(fx0-fx1)/(fx0-fx2) + x1*fx0*fx2/(fx1-fx0)/(fx1-fx2) + x2*fx0*fx1/(fx2-fx0)/(fx2-fx1)
                 self.EigenE[q] = x3

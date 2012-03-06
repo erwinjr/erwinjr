@@ -61,24 +61,22 @@ int psiFnEnd(double *eEq, int eEqSize, int xPsiSize, double xres, double EField,
   return 1;
 }
 
-int inv_quadratic_interp(double *xnew, double *ynew, int *idxs, int EigenESize, double *EigenE)
+int inv_quadratic_interp(double *xnew, double *ynew, double *idxs, int EigenESize, double *EigenE)
 {
   double x0=0, fx0=0,
          x1=0, fx1=0,
          x2=0, fx2=0, x3=0;
-  double d1=0, d2=0;
   int idx=0;
   int q=0;
   for(q=0;q<EigenESize;q++)
   {
     idx = *(idxs+q);
-    //printf("%d\n",idx);
+    printf("%d\n",idx);
     x0=*(xnew+idx-1); fx0=*(ynew+idx-1);
     x1=*(xnew+idx);   fx1=*(ynew+idx);
     x2=*(xnew+idx+1); fx2=*(ynew+idx+1);
-    d1=(fx1-fx0)/(x1-x0); d2=(fx2-fx1)/(x2-x1);
     x3 = x0*fx1*fx2/(fx0-fx1)/(fx0-fx2) + x1*fx0*fx2/(fx1-fx0)/(fx1-fx2) + x2*fx0*fx1/(fx2-fx0)/(fx2-fx1);
-    EigenE[q] = x3;
+    *(EigenE+q) = x3;
   }
   return 1;
 }
