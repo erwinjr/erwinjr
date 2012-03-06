@@ -308,7 +308,7 @@ class Strata(object):
             beta = betaInit
         
         beta_find_precision = 1e-5
-        if False: #setting to True makes the function stall in Mac OS X
+        if True: #setting to True makes the function stall in Mac OS X
             betaIn = beta
             stratumRIndexesReal = self.stratumRIndexes.real.copy()
             stratumRIndexesImag = self.stratumRIndexes.imag.copy()

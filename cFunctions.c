@@ -120,9 +120,6 @@ int psiFill(int xPsiSize, double xres, int EigenESize, double *EigenE, double *x
                 
       for(q=0;q<xPsiSize;q++)
         *(xyPsi+q+col*xPsiSize) *= A;
-
-
-
   }
   return 1;
 }
@@ -309,9 +306,9 @@ void beta_find(double wavelength, const double *thicknesses, const double *index
     int numBetas = 9;
     complex betas[9] = {0};
 
-    double abschiOld = 0, abschiNew = 0;
+    double abschiOld=0.0, abschiNew=0.0, absdeltachi=0.0;
     int chiMinIdx = 0;
-
+    int q=0;
     do{
         //set betas
         betas[0] = beta0;
@@ -335,7 +332,11 @@ void beta_find(double wavelength, const double *thicknesses, const double *index
         abschiOld = abschiNew;
         abschiNew = abschi[chiMinIdx];
         beta0 = betas[chiMinIdx];
-    }while(abs(abschiOld - abschiNew)/abschiOld > beta_find_precision);
+
+        //abschidelta was added in this way because abs() doesn't seem to give correct answer in Mac OS X
+        absdeltachi = abschiNew > abschiOld ? abschiNew-abschiOld : abschiOld-abschiNew;
+
+    }while(absdeltachi > beta_find_precision);
 
     *betaOut = real(beta0);
     *(betaOut+1) = imag(beta0);
