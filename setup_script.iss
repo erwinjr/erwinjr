@@ -8,7 +8,7 @@ DefaultGroupName=ErwinJr
 UninstallDisplayIcon={app}\EJico.ico
 Compression=lzma2
 SolidCompression=yes
-OutputDir=c:\erwinjr120217
+OutputDir=c:\erwinjr
 LicenseFile=license.txt
 ChangesAssociations=yes
 
@@ -77,7 +77,7 @@ Source: "dist/scipy/special/*"; DestDir: "{app}/scipy/special"
 Source: "dist/scipy/sparse/sparsetools/*"; DestDir: "{app}/scipy/sparse/sparsetools"
 Source: "dist/src/*"; DestDir: "{app}/src"
 ;Source: "dist/src/images/*"; DestDir: "{app}/src/images"
-Source: "dist/wx/*"; DestDir: "{app}/wx"
+;Source: "dist/wx/*"; DestDir: "{app}/wx"
 Source: "dist/xml/*"; DestDir: "{app}/xml"
 Source: "dist/xml/parsers/*"; DestDir: "{app}/xml/parsers"
 Source: "dist/xml/sax/*"; DestDir: "{app}/xml/sax"

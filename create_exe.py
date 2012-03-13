@@ -9,7 +9,7 @@ import os
 filesList = matplotlib.get_py2exe_datafiles()
 filesList.append(('', ['EJico.ico']))
 filesList.append(('', ['tutorial.pdf']))
-filesList.append(('', ['cFunctions.dll']))
+filesList.append(('', ['cFunctions.so']))
 filesList.append(('', ['license.txt']))
 filesList.append(('', ['EJico.ico']))
 filesList.append(('src', ['cFunctions.c']))
