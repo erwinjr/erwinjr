@@ -15,7 +15,7 @@ ErwinJr is a multi-platform application that runs on most desktop operating syst
 3) type the following at the command prompt
    cd \erwinjr
    gcc -c cFunctions.c
-   gcc -shared -o cFunctions.dll cFunctions.o
+   gcc -shared -o cFunctions.so cFunctions.o
    
 4) open (double click) on the file erwinjr.pyw
 
