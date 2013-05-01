@@ -34,9 +34,8 @@ import MaterialConstants
 c = MaterialConstants.MaterialConstants()
 
 from ctypes import *
-cFunctions=CDLL('cFunctions.so')
 try:
-    cFunctions=CDLL('cFunctions.so')
+    cFunctions=CDLL('./cFunctions.so')
 except WindowsError:
     cFunctions=CDLL('cFunctions.dll')
 
