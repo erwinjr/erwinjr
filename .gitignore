@@ -1,0 +1,8 @@
+*.pyd
+*.py[co]
+.idea/
+*.bak
+build/
+*.o
+*.out
+*.exe
